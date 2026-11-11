@@ -1,6 +1,6 @@
 services:
   bobine:
-    image: ghcr.io/OWNER/bobine:latest
+    image: ghcr.io/windgui2771/bobine:latest
     container_name: bobine
     restart: unless-stopped
     ports:

@@ -31,7 +31,7 @@ Bobine ne contient aucun film ni aucune série : c'est une façon de parcourir e
 ```yaml
 services:
   bobine:
-    image: ghcr.io/OWNER/bobine:latest
+    image: ghcr.io/windgui2771/bobine:latest
     restart: unless-stopped
     ports:
       - "8095:80"
