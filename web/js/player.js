@@ -68,7 +68,18 @@ export async function play(item, { startTicks, onExit, getNext } = {}) {
   let idleT;
   const wake = () => { root.classList.remove('idle'); clearTimeout(idleT); idleT = setTimeout(() => { if (!video.paused) root.classList.add('idle'); }, 4000); };
   root.addEventListener('mousemove', wake);
+  // tactile : un appui affiche/masque les commandes, double appui à gauche/droite = -10 s / +30 s
+  let lastTap = 0;
+  root.addEventListener('pointerup', (e) => {
+    if (e.pointerType !== 'touch' || e.target.closest('button, .track2, .menu, .next')) return;
+    const now2 = Date.now(), x = e.clientX / window.innerWidth;
+    if (now2 - lastTap < 300 && (x < 0.35 || x > 0.65)) { seekBy(x < 0.35 ? -10 : 30); toast(x < 0.35 ? '−10 s' : '+30 s'); lastTap = 0; return; }
+    lastTap = now2;
+    if (root.classList.contains('idle')) wake(); else { root.classList.add('idle'); clearTimeout(idleT); }
+  });
   wake();
+  // téléphone : la vidéo passe en paysage pendant la lecture
+  try { window.AppNative?.setLandscape?.(true); } catch {}
 
   const duration = () => (it.RunTimeTicks ? it.RunTimeTicks / 1e7 : video.duration) || 0;
   // pour un flux converti, video.currentTime repart de 0 au point de départ demandé
@@ -242,6 +253,7 @@ export async function play(item, { startTicks, onExit, getNext } = {}) {
     if (hls) hls.destroy();
     video.pause(); video.removeAttribute('src'); video.load();
     off(); root.remove();
+    try { window.AppNative?.setLandscape?.(false); } catch {}
     if (!keepCb) onExit?.();
   }
   function close() { teardown(false); }

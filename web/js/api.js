@@ -15,6 +15,10 @@ function deviceId() {
   return id;
 }
 function deviceName() {
+  const pf = window.AppNative?.platform?.();
+  if (pf === 'windows') return 'Windows';
+  if (pf === 'android-tv') return 'Android TV';
+  if (pf === 'android') return 'Android';
   if (window.AppNative) return 'Android TV';
   const ua = navigator.userAgent;
   if (/Windows/.test(ua)) return 'PC Windows';
@@ -29,6 +33,15 @@ export const api = {
   user: null,
 
   setServer(url) { this.base = url.replace(/\/+$/, ''); LS.set('server', this.base); },
+  // deux adresses possibles : maison (rapide) puis extérieure (ex. https://jellyfin.mondomaine.fr)
+  async pickServer() {
+    const list = [LS.get('server', ''), LS.get('server2', '')].filter(Boolean).map((u) => u.replace(/\/+$/, ''));
+    for (const [i, u] of list.entries()) {
+      const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), i === 0 && list.length > 1 ? 2500 : 8000);
+      try { const r = await fetch(u + '/System/Info/Public', { signal: ctl.signal }); clearTimeout(t); if (r.ok) { this.base = u; return u; } } catch { clearTimeout(t); }
+    }
+    this.base = list[0] || ''; return null;
+  },
   auth() {
     let s = `MediaBrowser Client="${CFG.appName}", Device="${deviceName()}", DeviceId="${deviceId()}", Version="${VERSION}"`;
     if (this.token) s += `, Token="${this.token}"`;

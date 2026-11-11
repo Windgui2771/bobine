@@ -12,7 +12,8 @@ web/                 L'interface : HTML, CSS et JavaScript (modules ES), sans é
   js/seerr.js          demandes Seerr
   js/ui.js             composants (cartes, rangées, icônes)
   vendor/hls.min.js    hls.js (Apache-2.0)
-android/             L'appli Android TV : une WebView qui contient l'interface
+android/             L'appli Android (TV et téléphone) : une WebView qui contient l'interface
+desktop/             L'appli Windows (Electron) : même interface, servie sous app://bobine/
 docker/              Script de démarrage de l'image Docker (génère config.json et la config nginx)
 Dockerfile           Image nginx qui sert l'interface et relaie Seerr
 .github/workflows/   Publication automatique (APK + image Docker) à chaque tag vX.Y.Z
@@ -50,9 +51,9 @@ docker run -p 8095:80 -e JELLYFIN_URL=http://192.168.1.10:8096 bobine
 
 ## Publier une version (mainteneur)
 
-1. Mets à jour `CHANGELOG.md`, la version dans `web/js/config.js` et `versionCode`/`versionName` dans `android/app/build.gradle`.
+1. Mets à jour `CHANGELOG.md`, la version dans `web/js/config.js`, `desktop/package.json`, `desktop/preload.js` et `versionCode`/`versionName` dans `android/app/build.gradle`.
 2. Crée une Release GitHub avec le tag `vX.Y.Z`.
-3. Le workflow construit l'image `ghcr.io/windgui2771/bobine` (amd64 + arm64). Si les secrets de signature sont configurés, il compile aussi l'APK signée et la joint à la Release.
+3. Le workflow construit l'image `ghcr.io/windgui2771/bobine` (amd64 + arm64) et l'appli Windows (installateur + portable), jointe à la Release. Si les secrets de signature sont configurés, il compile aussi l'APK signée et la joint à la Release.
 
 Secrets du dépôt (*Settings → Secrets and variables → Actions*) :
 

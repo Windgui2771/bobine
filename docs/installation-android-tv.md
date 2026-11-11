@@ -1,4 +1,4 @@
-# Installer Bobine sur Android TV
+# Installer Bobine sur Android (TV, box, téléphone)
 
 Ce guide vaut pour toutes les box et TV Android : Android TV, Google TV, Xiaomi Mi Box, Nvidia Shield, Chromecast avec Google TV, TV Sony / TCL / Philips sous Android…
 
@@ -32,6 +32,16 @@ Si tu utilises Seerr (ou Jellyseerr / Overseerr) :
 1. Va dans le **Tableau de bord → Réglages appli**, ou dans **Profil** si tu n'es pas administrateur.
 2. Renseigne l'adresse de Seerr, par exemple `http://192.168.1.10:5055`, puis **Enregistrer**.
 3. L'onglet **Demandes** apparaît. Connecte-toi avec ton compte Jellyfin.
+
+## Sur un téléphone ou une tablette
+
+C'est la même APK : l'interface s'adapte toute seule, avec des onglets en bas et un menu « Plus ».
+
+1. Depuis le téléphone, ouvre la page des [Releases](https://github.com/Windgui2771/bobine/releases/latest) et touche `Bobine-vX.Y.Z.apk`.
+2. Ouvre le fichier téléchargé. Android demande d'autoriser ton navigateur à « installer des applis inconnues » : accepte pour cette fois.
+3. Au premier lancement, saisis l'adresse de la maison et, pour regarder dehors, l'[adresse extérieure](acces-exterieur.md).
+
+Pendant la lecture, la vidéo passe en paysage. Un appui affiche ou masque les commandes, et un double appui à gauche ou à droite recule de 10 s ou avance de 30 s.
 
 ## Mettre à jour
 

@@ -2,13 +2,14 @@
 
 <p align="center">
   <b>Une interface moderne pour regarder ton serveur Jellyfin sur la TV, le PC ou la Xbox.</b><br>
-  Télécommande, manette, clavier ou souris · Android TV · navigateur · Docker
+  Télécommande, manette, tactile, clavier ou souris · Android TV · téléphone Android · Windows · navigateur
 </p>
 
 <p align="center">
   <a href="../../releases/latest">Télécharger</a> ·
   <a href="docs/installation-android-tv.md">Installer sur Android TV</a> ·
-  <a href="docs/installation-docker.md">Installer avec Docker</a> ·
+  <a href="docs/installation-windows.md">Windows</a> ·
+  <a href="docs/installation-docker.md">Docker</a> ·
   <a href="docs/faq.md">FAQ</a> ·
   <a href="CHANGELOG.md">Nouveautés</a>
 </p>
@@ -43,7 +44,8 @@
 | 📊 **Tableau de bord** (administrateur) | Qui regarde en ce moment, analyse d'une bibliothèque, tâches planifiées, utilisateurs, appareils, extensions. |
 | 🙋 **Demandes** (optionnel, avec [Seerr](https://github.com/seerr-team/seerr)) | Demander un titre absent de la bibliothèque, suivre ses demandes, **valider ou refuser celles des autres**. |
 | 🌙 **Écran de veille** | Les images de ta bibliothèque en fondu, avec l'heure. |
-| 🎮 **Commandes** | Télécommande Android TV, manette Xbox/PC, clavier et souris. |
+| 🎮 **Commandes** | Télécommande Android TV, manette Xbox/PC, écran tactile, clavier et souris. |
+| 🌍 **À la maison et dehors** | Deux adresses de serveur : Bobine prend toute seule celle qui répond. [En savoir plus](docs/acces-exterieur.md) |
 
 ## Ce qu'il te faut
 
@@ -55,8 +57,10 @@
 
 | Appareil | Comment | Guide |
 |---|---|---|
-| Android TV, Google TV, box Android (Xiaomi, Nvidia Shield, Chromecast…) | APK à installer | [Guide Android TV](docs/installation-android-tv.md) |
-| PC, Mac, Xbox, n'importe quel navigateur | version web, hébergée avec Docker | [Guide Docker](docs/installation-docker.md) |
+| Android TV, Google TV, box Android (Xiaomi, Nvidia Shield, Chromecast…) | APK à installer | [Guide Android](docs/installation-android-tv.md) |
+| Téléphone et tablette Android | la même APK, qui s'adapte à l'écran tactile | [Guide Android](docs/installation-android-tv.md#sur-un-téléphone-ou-une-tablette) |
+| Windows 10 / 11 | appli à installer ou version portable | [Guide Windows](docs/installation-windows.md) |
+| Mac, Xbox, iPhone, n'importe quel navigateur | version web, hébergée avec Docker | [Guide Docker](docs/installation-docker.md) |
 
 ### Démarrage express avec Docker
 

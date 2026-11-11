@@ -7,7 +7,11 @@ import { LS } from './api.js';
 const pending = {};
 window.__nativeResp = (id, status, text) => { const cb = pending[id]; if (cb) { delete pending[id]; cb({ status, text }); } };
 function nativeFetch(method, url, body) {
-  return new Promise((res) => { const id = Math.random().toString(36).slice(2); pending[id] = res; window.AppNative.request(id, method, url, body || ''); });
+  return new Promise((res) => {
+    const id = Math.random().toString(36).slice(2); pending[id] = res;
+    const p = window.AppNative.request(id, method, url, body || '');
+    if (p && typeof p.then === 'function') p.then((r) => { delete pending[id]; res(r); }); // Windows : réponse directe
+  });
 }
 
 export const seerr = {

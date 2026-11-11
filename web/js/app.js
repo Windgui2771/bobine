@@ -72,6 +72,17 @@ function drawRail(active) {
         .concat(api.isAdmin ? [['server', 'server', 'Tableau de bord']] : []);
   const u = api.user;
   const pic = api.userImg(u);
+  // téléphone : 4 onglets principaux + « Plus » qui ouvre le reste
+  if (matchMedia('(max-width:820px)').matches) {
+    const main = ['home', 'search', 'films', 'series'];
+    const prim = items.filter(([k]) => main.includes(k)).sort((a, b) => main.indexOf(a[0]) - main.indexOf(b[0]));
+    const rest = items.filter(([k]) => !main.includes(k));
+    const moreOn = rest.some(([k]) => k === active) || active === 'me';
+    rail.replaceChildren(
+      ...prim.map(([k, ic, label]) => h('button', { class: 'f' + (active === k ? ' on' : ''), 'aria-label': label, onclick: () => { stack.length = 0; go(k); } }, icon(ic), h('span', {}, label))),
+      h('button', { class: 'f' + (moreOn ? ' on' : ''), 'aria-label': 'Plus', onclick: () => moreSheet(rest, kids) }, icon('list'), h('span', {}, 'Plus')));
+    return;
+  }
   rail.replaceChildren(
     h('button', { class: 'logo f', 'data-key': 'rail-logo', 'aria-label': 'Accueil', onclick: () => { stack.length = 0; go('home'); } }, h('img', { src: 'icon.svg', alt: '' })),
     ...items.map(([k, ic, label]) => h('button', { class: 'f' + (active === k ? ' on' : ''), 'data-key': 'rail-' + k, 'aria-label': label, 'aria-current': active === k ? 'page' : null,
@@ -81,6 +92,15 @@ function drawRail(active) {
       pic ? h('img', { src: pic, alt: '' }) : (u.Name[0] || '?').toUpperCase())
   );
 }
+
+function moreSheet(rest, kids) {
+  const close = modal([h('h2', {}, 'Menu'),
+    h('div', { class: 'list', style: { width: '100%' } },
+      rest.map(([k, ic, label]) => h('button', { class: 'li f', style: { justifyContent: 'flex-start', gap: '14px', width: '100%' }, onclick: () => { close(); stack.length = 0; go(k); } }, icon(ic), label)),
+      h('button', { class: 'li f', style: { justifyContent: 'flex-start', gap: '14px', width: '100%' }, onclick: () => { close(); kids ? askPin(() => go('profiles')) : go('me'); } }, icon('out'), 'Profil · ' + api.user.Name))]);
+}
+let resizeT;
+window.addEventListener('resize', () => { clearTimeout(resizeT); resizeT = setTimeout(() => { if (stack.length && api.user) drawRail(stack.at(-1).name); }, 200); });
 
 // ---------- ouverture d'un élément ----------
 function open(it) {
@@ -102,16 +122,23 @@ async function nextEpisode(ep) {
 const SCREENS = {
   async setup() {
     const guess = CFG.server || (location.protocol === 'http:' && !native ? `http://${location.hostname}:8096` : 'http://');
-    const inp = h('input', { class: 'input f', id: 'srv', value: api.base || guess, 'data-autofocus': true, inputmode: 'url', autocomplete: 'off' });
+    const inp = h('input', { class: 'input f', id: 'srv', value: LS.get('server', '') || guess, 'data-autofocus': true, inputmode: 'url', autocomplete: 'off' });
+    const inp2 = h('input', { class: 'input f', id: 'srv2', value: LS.get('server2', ''), placeholder: 'https://jellyfin.mondomaine.fr', inputmode: 'url', autocomplete: 'off' });
     const err = h('div', { class: 'err', role: 'alert' });
     const submit = async () => {
       err.textContent = '';
-      try { api.setServer(inp.value.trim()); const i = await api.publicInfo(); toast('Connecté à ' + i.ServerName); stack.length = 0; go('profiles'); }
+      LS.set('server', inp.value.trim().replace(/\/+$/, '')); LS.set('server2', inp2.value.trim().replace(/\/+$/, ''));
+      const ok = await api.pickServer();
+      if (!ok) { err.textContent = 'Aucune des deux adresses ne répond.'; return; }
+      try { const i = await api.publicInfo(); toast('Connecté à ' + i.ServerName + (ok === LS.get('server2') ? ' (adresse extérieure)' : '')); stack.length = 0; go('profiles'); }
       catch { err.textContent = 'Serveur introuvable à cette adresse.'; }
     };
-    inp.addEventListener('submit-input', submit);
+    inp.addEventListener('submit-input', () => inp2.focus());
+    inp2.addEventListener('submit-input', submit);
     return h('div', { class: 'center' }, h('img', { src: 'icon.svg', alt: '', style: { width: '72px' } }), h('h1', {}, CFG.appName),
-      h('div', { class: 'field' }, h('label', { for: 'srv' }, 'Adresse du serveur Jellyfin'), inp), err,
+      h('div', { class: 'field' }, h('label', { for: 'srv' }, 'Adresse du serveur Jellyfin (à la maison)'), inp),
+      h('div', { class: 'field' }, h('label', { for: 'srv2' }, 'Adresse extérieure (optionnel)'), inp2,
+        h('small', { class: 'muted', style: { lineHeight: 1.4 } }, 'Utilisée automatiquement quand l\u2019adresse de la maison ne répond pas.')), err,
       h('button', { class: 'btn primary f', onclick: submit }, 'Continuer'));
   },
 
@@ -482,7 +509,7 @@ async function searchScreen() {
   inp.addEventListener('submit-input', () => { clearTimeout(t); run(); });
 
   // voix : micro de la télécommande (appli TV) ou micro du PC (Chrome/Edge)
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const SR = native ? null : (window.SpeechRecognition || window.webkitSpeechRecognition);
   let mic = null;
   if (native?.startVoice || SR) {
     mic = h('button', { class: 'mic f', 'aria-label': 'Recherche vocale', onclick: () => listen() }, icon('mic'));
@@ -751,7 +778,8 @@ async function meScreen() {
     h('button', { class: 'btn f', onclick: () => confirmModal('Se déconnecter de ce profil sur cet appareil ?', async () => { await seerr.logout(); await api.logout(); stack.length = 0; go('profiles'); }) }, icon('out'), 'Se déconnecter'));
   return h('div', { class: 'page' }, h('div', { class: 'kicker' }, 'Profil'), h('h1', {}, api.user.Name), h('div', { style: { marginTop: '24px' } }, st),
     !api.isAdmin ? h('div', { style: { marginTop: '30px' } }, playerSettings()) : null,
-    h('div', { class: 'muted', style: { marginTop: '40px', fontSize: '13px' } }, CFG.appName + ' ' + CFG.version + ' · serveur ' + api.base));
+    h('div', { style: { marginTop: '30px' } }, h('button', { class: 'btn small f', onclick: () => go('setup') }, 'Adresses du serveur')),
+    h('div', { class: 'muted', style: { marginTop: '30px', fontSize: '13px' } }, CFG.appName + ' ' + CFG.version + ' · serveur ' + api.base));
 }
 
 function confirmModal(text, action) {
@@ -826,7 +854,8 @@ window.appVoiceKey = () => { if (!api.user || document.querySelector('.player'))
 if (new URLSearchParams(location.search).has('debug')) window.__cp = { api, go, afterLogin, seerr }; // aide aux tests
 
 (async () => {
-  if (!api.base) return go('setup');
+  if (!LS.get('server', '')) return go('setup');
+  await api.pickServer();
   const last = LS.get('last');
   if (last && await api.resume(last)) return afterLogin();
   go('profiles');

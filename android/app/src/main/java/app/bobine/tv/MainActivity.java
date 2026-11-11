@@ -3,7 +3,10 @@ package app.bobine.tv;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.app.UiModeManager;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -44,6 +47,11 @@ public class MainActivity extends Activity {
     private SharedPreferences prefs;
     private boolean failed = false;
 
+    private boolean isTv() {
+        UiModeManager m = (UiModeManager) getSystemService(UI_MODE_SERVICE);
+        return m != null && m.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION;
+    }
+
     private String startUrl() {
         return BuildConfig.APP_URL.isEmpty() ? LOCAL : BuildConfig.APP_URL;
     }
@@ -65,7 +73,7 @@ public class MainActivity extends Activity {
         s.setMediaPlaybackRequiresUserGesture(false);
         // l'interface est servie en https (intégrée), les serveurs maison sont souvent en http
         s.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-        s.setUserAgentString(s.getUserAgentString() + " BobineTV/" + BuildConfig.VERSION_NAME);
+        s.setUserAgentString(s.getUserAgentString() + " BobineApp/" + BuildConfig.VERSION_NAME);
         web.setFocusable(true);
         web.setFocusableInTouchMode(true);
         web.addJavascriptInterface(new Bridge(), "AppNative");
@@ -185,6 +193,12 @@ public class MainActivity extends Activity {
             new Thread(() -> httpRequest(id, method, url, body)).start();
         }
         @JavascriptInterface public void exit() { runOnUiThread(MainActivity.this::finish); }
+        @JavascriptInterface public String platform() { return isTv() ? "android-tv" : "android"; }
+        /** téléphone : paysage forcé pendant la lecture, libre sinon */
+        @JavascriptInterface public void setLandscape(boolean on) {
+            if (isTv()) return;
+            runOnUiThread(() -> setRequestedOrientation(on ? ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE : ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED));
+        }
         @JavascriptInterface public String version() { return BuildConfig.VERSION_NAME; }
     }
 }

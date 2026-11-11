@@ -1,5 +1,18 @@
 # Nouveautés
 
+## 0.3.0 — 11 novembre 2026
+
+### Nouveaux appareils
+- **Téléphones et tablettes Android** : interface tactile avec onglets en bas et menu « Plus », vidéo en paysage pendant la lecture, double appui pour reculer ou avancer.
+- **Windows 10 / 11** : appli à installer ou version portable, plein écran avec F11 et automatique pendant les vidéos, manette Xbox.
+
+### Ailleurs que chez soi
+- **Deux adresses de serveur** (maison + extérieure) : Bobine prend toute seule celle qui répond.
+
+### Corrections
+- Téléphone en paysage : menu latéral compact.
+- Points de la bannière qui pouvaient recouvrir les boutons.
+
 ## 0.2.0 — 11 novembre 2026
 
 Première version publique.

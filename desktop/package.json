@@ -1,0 +1,68 @@
+{
+  "name": "bobine-desktop",
+  "productName": "Bobine",
+  "version": "0.3.0",
+  "description": "Interface moderne pour Jellyfin",
+  "main": "main.js",
+  "license": "MIT",
+  "author": "Bobine",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win --publish never"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "app.bobine.desktop",
+    "productName": "Bobine",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "../web",
+        "to": "web",
+        "filter": [
+          "**/*",
+          "!config.json"
+        ]
+      }
+    ],
+    "icon": "build/icon.png",
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "Bobine",
+      "language": "1036",
+      "artifactName": "Bobine-${version}-installation.${ext}"
+    },
+    "portable": {
+      "artifactName": "Bobine-${version}-portable.${ext}"
+    }
+  }
+}
