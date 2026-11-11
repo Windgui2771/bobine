@@ -45,10 +45,15 @@ jobs:
           distribution: temurin
           java-version: '17'
       - name: Clé de signature
+        id: key
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
-        run: echo "$KEYSTORE_BASE64" | base64 -d > android/release.keystore
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ]; then echo "Pas de clé de signature : APK non compilée (voir README)"; echo "ok=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          echo "$KEYSTORE_BASE64" | base64 -d > android/release.keystore
+          echo "ok=true" >> "$GITHUB_OUTPUT"
       - name: Compiler l'APK
+        if: steps.key.outputs.ok == 'true'
         working-directory: android
         env:
           KEYSTORE_FILE: ${{ github.workspace }}/android/release.keystore
@@ -59,7 +64,7 @@ jobs:
           ./gradlew assembleRelease --no-daemon
           cp app/build/outputs/apk/release/app-release.apk ../Bobine-${{ github.ref_name }}.apk
       - uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/') && steps.key.outputs.ok == 'true'
         with:
           files: Bobine-*.apk
           generate_release_notes: true
