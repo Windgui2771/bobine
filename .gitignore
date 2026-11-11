@@ -1,0 +1,9 @@
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+*.keystore
+*.jks
+ks_pass.txt
+.DS_Store
+web/config.json

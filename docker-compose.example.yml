@@ -1,0 +1,11 @@
+services:
+  bobine:
+    image: ghcr.io/OWNER/bobine:latest
+    container_name: bobine
+    restart: unless-stopped
+    ports:
+      - "8095:80"
+    environment:
+      JELLYFIN_URL: "http://192.168.1.10:8096"   # adresse de ton Jellyfin (proposée au premier lancement)
+      SEERR_URL: ""                              # optionnel, ex. http://192.168.1.10:5055 pour les demandes
+      HOMEPAGE_URL: ""                           # optionnel, lien vers ton tableau de bord de services

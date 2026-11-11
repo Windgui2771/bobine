@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#05070B"/>
+  <!-- bande de film qui se déroule -->
+  <path d="M29 51 H58 V59 H26" fill="none" stroke="#22E1FF" stroke-width="2.5" stroke-linejoin="round"/>
+  <g fill="#22E1FF"><rect x="35" y="53.5" width="3" height="3" rx=".6"/><rect x="42" y="53.5" width="3" height="3" rx=".6"/><rect x="49" y="53.5" width="3" height="3" rx=".6"/></g>
+  <!-- bobine -->
+  <circle cx="29" cy="30" r="21" fill="#05070B" stroke="#22E1FF" stroke-width="3"/>
+  <g fill="none" stroke="#22E1FF" stroke-width="2.5">
+    <circle cx="29" cy="17.5" r="5"/>
+    <circle cx="40.9" cy="26.1" r="5"/>
+    <circle cx="36.3" cy="40.1" r="5"/>
+    <circle cx="21.7" cy="40.1" r="5"/>
+    <circle cx="17.1" cy="26.1" r="5"/>
+  </g>
+  <circle cx="29" cy="30" r="2.6" fill="#22E1FF"/>
+</svg>

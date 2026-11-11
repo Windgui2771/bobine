@@ -1,0 +1,9 @@
+{
+  "name": "Bobine",
+  "short_name": "Bobine",
+  "start_url": "./",
+  "display": "fullscreen",
+  "background_color": "#05070B",
+  "theme_color": "#05070B",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}
