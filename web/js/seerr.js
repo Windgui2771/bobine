@@ -1,4 +1,4 @@
-// Demandes via Seerr, à travers le relais /seerr/ du conteneur cineprive (même adresse que l'appli).
+// Demandes via Seerr, à travers le relais /seerr/ de l'image Docker (même adresse que l'appli).
 // Chaque personne se connecte à Seerr avec son compte Jellyfin : Seerr applique ses droits habituels.
 import { CFG } from './config.js';
 import { LS } from './api.js';
