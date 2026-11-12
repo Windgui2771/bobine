@@ -1,5 +1,9 @@
 # Nouveautés
 
+## 0.3.2 — 12 novembre 2026
+
+- Correction : les affiches et vignettes sont maintenant affichées en image de fond (comme la bannière) au lieu de balises `<img loading="lazy">`, que certaines télés ne chargeaient jamais.
+
 ## 0.3.1 — 12 novembre 2026
 
 - Correction : les affiches restaient noires sur les télés dont le moteur web (« Android System WebView ») est ancien. Les mises en page n'utilisent plus `inset`, `aspect-ratio` ni `gap` sans solution de repli.

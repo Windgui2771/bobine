@@ -99,6 +99,7 @@ body.keys .bnav{display:none}
 .card{flex:0 0 auto;position:relative;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--panel);padding:0;text-align:left;color:#fff}
 .card.poster{width:180px;aspect-ratio:2/3}
 .card.wide{width:320px;aspect-ratio:16/9}
+.card .img,.ep .thumb .img{position:absolute;top:0;right:0;bottom:0;left:0;background-size:cover;background-position:center;background-repeat:no-repeat}
 .card img{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%;object-fit:cover;display:block}
 .card .ph{position:absolute;top:0;right:0;bottom:0;left:0;display:flex;align-items:flex-end;padding:14px;font-family:var(--disp);font-weight:700;font-size:18px;line-height:1.1;background:linear-gradient(160deg,#1a2433,#0b0f16)}
 .card .cap{position:absolute;left:0;right:0;bottom:0;padding:30px 12px 10px;background:linear-gradient(0deg,rgba(5,7,11,.95),rgba(5,7,11,0));font-size:14px;font-weight:600}

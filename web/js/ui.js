@@ -63,10 +63,9 @@ export const fmt = {
 };
 
 // --- cartes ---
-function imgEl(src, alt) {
-  const i = h('img', { src, alt: '', loading: 'lazy', decoding: 'async' });
-  i.addEventListener('error', () => i.remove());
-  return i;
+// image en fond CSS (comme la bannière) : s'affiche aussi sur les télés au moteur web ancien
+export function imgEl(src) {
+  return h('div', { class: 'img', style: { backgroundImage: `url("${src}")` } });
 }
 export function posterCard(it, onOpen) {
   const isEp = it.Type === 'Episode';

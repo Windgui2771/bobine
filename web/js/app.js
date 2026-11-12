@@ -1,6 +1,6 @@
 import { api, LS } from './api.js';
 import { nav } from './nav.js';
-import { h, icon, toast, fmt, posterCard, wideCard, folderCard, shelf, backdropUrl, logoUrl } from './ui.js';
+import { h, icon, toast, fmt, imgEl, posterCard, wideCard, folderCard, shelf, backdropUrl, logoUrl } from './ui.js';
 import { play } from './player.js';
 import { seerr } from './seerr.js';
 import { CFG } from './config.js';
@@ -417,7 +417,7 @@ function episodeRow(e) {
   const ud = e.UserData || {};
   const src = e.ImageTags?.Primary ? api.img(e.Id, 'Primary', { maxWidth: 440, tag: e.ImageTags.Primary }) : null;
   return h('button', { class: 'ep f', 'data-key': e.Id, onclick: () => playNow(e) },
-    h('div', { class: 'thumb' }, src ? h('img', { src, alt: '', loading: 'lazy' }) : null,
+    h('div', { class: 'thumb' }, src ? imgEl(src) : null,
       ud.PlayedPercentage > 0 && !ud.Played ? h('div', { class: 'bar', style: { position: 'absolute', left: 0, right: 0, bottom: 0, height: '4px', background: 'rgba(255,255,255,.2)' } }, h('i', { style: { display: 'block', height: '100%', width: ud.PlayedPercentage + '%', background: 'var(--accent)' } })) : null,
       ud.Played ? h('span', { class: 'seen', style: { position: 'absolute', top: '8px', right: '8px', width: '24px', height: '24px', borderRadius: '50%', background: 'var(--accent)', color: '#05070B', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 } }, '✓') : null),
     h('div', {}, h('div', { class: 'kicker' }, `Épisode ${e.IndexNumber ?? '?'}` + (e.RunTimeTicks ? ' · ' + fmt.runtime(e.RunTimeTicks) : '')),
@@ -552,7 +552,7 @@ function seerrCard(x) {
   const status = seerr.mediaStatus(x.mediaInfo?.status);
   const src = seerr.poster(x.posterPath);
   return h('button', { class: 'card poster f', 'data-key': 's' + x.id, 'aria-label': `${title} ${year}, ${status || 'à demander'}`, onclick: () => requestModal(x) },
-    h('div', { class: 'ph' }, title), src ? h('img', { src, alt: '', loading: 'lazy' }) : null,
+    h('div', { class: 'ph' }, title), src ? imgEl(src) : null,
     h('div', { class: 'cap' }, title, h('small', {}, [x.mediaType === 'tv' ? 'Série' : 'Film', year, status].filter(Boolean).join(' · '))));
 }
 
