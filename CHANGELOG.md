@@ -1,5 +1,9 @@
 # Nouveautés
 
+## 0.3.3 — 12 novembre 2026
+
+- Correction Android : l'interface intégrée est servie en `http://appassets.androidplatform.net`. Servie en https, certains moteurs web (télés TCL notamment) forçaient en https les images et vidéos d'un serveur Jellyfin en http, qui restaient donc invisibles. Après la mise à jour, il faut se reconnecter une fois.
+
 ## 0.3.2 — 12 novembre 2026
 
 - Correction : les affiches et vignettes sont maintenant affichées en image de fond (comme la bannière) au lieu de balises `<img loading="lazy">`, que certaines télés ne chargeaient jamais.

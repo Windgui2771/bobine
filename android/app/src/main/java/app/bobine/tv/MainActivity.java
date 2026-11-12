@@ -41,7 +41,9 @@ import org.json.JSONObject;
  */
 public class MainActivity extends Activity {
     private static final int VOICE = 42;
-    private static final String LOCAL = "https://appassets.androidplatform.net/assets/www/index.html";
+    // servie en http : sinon les vieux moteurs web « remontent » en https les images et vidéos
+    // d'un serveur maison en http (contenu mixte), et elles ne s'affichent jamais
+    private static final String LOCAL = "http://appassets.androidplatform.net/assets/www/index.html";
     private WebView web;
     private WebViewAssetLoader assets;
     private SharedPreferences prefs;
@@ -61,7 +63,7 @@ public class MainActivity extends Activity {
         super.onCreate(b);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         prefs = getSharedPreferences("app", MODE_PRIVATE);
-        assets = new WebViewAssetLoader.Builder().addPathHandler("/assets/", new WebViewAssetLoader.AssetsPathHandler(this)).build();
+        assets = new WebViewAssetLoader.Builder().setHttpAllowed(true).addPathHandler("/assets/", new WebViewAssetLoader.AssetsPathHandler(this)).build();
         web = new WebView(this);
         web.setBackgroundColor(Color.parseColor("#05070B"));
         setContentView(web);
@@ -71,7 +73,7 @@ public class MainActivity extends Activity {
         s.setJavaScriptEnabled(true);
         s.setDomStorageEnabled(true);
         s.setMediaPlaybackRequiresUserGesture(false);
-        // l'interface est servie en https (intégrée), les serveurs maison sont souvent en http
+        // au cas où l'interface serait servie en https (APP_URL) et le serveur en http
         s.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         s.setUserAgentString(s.getUserAgentString() + " BobineApp/" + BuildConfig.VERSION_NAME);
         web.setFocusable(true);

@@ -1,7 +1,7 @@
 {
   "name": "bobine-desktop",
   "productName": "Bobine",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Interface moderne pour Jellyfin",
   "main": "main.js",
   "license": "MIT",
