@@ -21,7 +21,9 @@ function buildProfile() {
   a.push('vorbis');
   const native = !!window.AppNative; // la WebView Android lit aussi le MKV
   const containers = ['mp4', 'm4v', 'mov', 'webm'].concat(native ? ['mkv', 'matroska'] : []);
-  const hlsV = v.filter((c) => c === 'h264' || c === 'hevc').join(',') || 'h264';
+  // flux converti : toujours en H.264. Le lecteur HLS ne sait pas lire le HEVC dans du MPEG-TS,
+  // même quand la télé annonce savoir décoder le HEVC (lecture directe).
+  const hlsV = 'h264';
   return {
     Name: 'web-tv-client', MaxStreamingBitrate: 120000000, MaxStaticBitrate: 120000000, MusicStreamingTranscodingBitrate: 384000,
     DirectPlayProfiles: [{ Type: 'Video', Container: containers.join(','), VideoCodec: v.join(','), AudioCodec: a.join(',') }],
@@ -98,7 +100,14 @@ export async function play(item, { startTicks, onExit, getNext } = {}) {
     if (window.Hls?.isSupported()) {
       hls = new window.Hls({ startPosition: startSec || 0, maxBufferLength: 40 });
       hls.loadSource(url); hls.attachMedia(video);
-      hls.on(window.Hls.Events.ERROR, (_, d) => { if (d.fatal) { console.error(d); if (d.type === 'networkError') hls.startLoad(); else toast('Erreur de lecture'); } });
+      let healed = false;
+      hls.on(window.Hls.Events.ERROR, (_, d) => {
+        if (!d.fatal) return;
+        console.error(d);
+        if (d.type === 'networkError') hls.startLoad();
+        else if (d.type === 'mediaError' && !healed) { healed = true; hls.recoverMediaError(); }
+        else toast('Erreur de lecture');
+      });
     } else {
       video.src = url;
       if (startSec) video.addEventListener('loadedmetadata', () => { video.currentTime = startSec; }, { once: true });

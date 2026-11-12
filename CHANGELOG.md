@@ -1,5 +1,9 @@
 # Nouveautés
 
+## 0.3.4 — 12 novembre 2026
+
+- Correction : « Erreur de lecture » sur les télés qui annoncent savoir décoder le HEVC. Le flux converti par Jellyfin est maintenant toujours en H.264 (le lecteur HLS ne lit pas le HEVC en MPEG-TS), et le lecteur tente une récupération avant d'abandonner.
+
 ## 0.3.3 — 12 novembre 2026
 
 - Correction Android : l'interface intégrée est servie en `http://appassets.androidplatform.net`. Servie en https, certains moteurs web (télés TCL notamment) forçaient en https les images et vidéos d'un serveur Jellyfin en http, qui restaient donc invisibles. Après la mise à jour, il faut se reconnecter une fois.
