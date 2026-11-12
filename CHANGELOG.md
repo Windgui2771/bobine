@@ -1,5 +1,9 @@
 # Nouveautés
 
+## 0.3.1 — 12 novembre 2026
+
+- Correction : les affiches restaient noires sur les télés dont le moteur web (« Android System WebView ») est ancien. Les mises en page n'utilisent plus `inset`, `aspect-ratio` ni `gap` sans solution de repli.
+
 ## 0.3.0 — 11 novembre 2026
 
 ### Nouveaux appareils

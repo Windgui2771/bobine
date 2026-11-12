@@ -2,7 +2,7 @@
 const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('AppNative', {
   platform: () => 'windows',
-  version: () => '0.3.0',
+  version: () => '0.3.1',
   request: (id, method, url, body) => ipcRenderer.invoke('bobine:request', { method, url, body }),
   // lecture : plein écran pendant la vidéo
   setLandscape: (on) => ipcRenderer.send('bobine:fullscreen', on)
